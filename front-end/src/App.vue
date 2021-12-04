@@ -3,11 +3,11 @@
   <div class="header">
     <router-link to="/">
       <div class="logo">
-        <img src="/ordinary.png">
+        <img id="logo_image" src="/controller.png">
       </div>
     </router-link>
     <div class="title">
-      <h1>Museum of Ordinary Objects</h1>
+      <h1>JJ Used Games</h1>
     </div>
   </div>
   <div class="content">
@@ -15,7 +15,7 @@
   </div>
   <div class="footer">
     <router-link to="/admin">Admin</router-link>
-    <p class="footer">My Project's Github: <a href="https://github.com/BYUCS260/museum-jonath8">LINK</a></p>
+    <p class="footer">My Project's Github: <a href="https://github.com/nielsenjon/creative4">LINK</a></p>
   </div>
 </div>
 </template>
@@ -36,9 +36,14 @@ body {
 /* Header */
 .header {
   display: flex;
+  justify-content: center;
   padding: 10px 100px 0px 100px;
-  background-color: #5BDEFF;
-  color: #1C454F;
+  background-color: #bfbfbd;
+}
+
+#logo_image {
+  width: 60px;
+  height: 60px;
 }
 
 .title {
@@ -58,7 +63,7 @@ body {
 .footer {
   height: 50px;
   padding: 20px 100px 0px 100px;
-  background: #e3e3e3;
+  background: #bfbfbd;
   font-size: 12px;
 }
 

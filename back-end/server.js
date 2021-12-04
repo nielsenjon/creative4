@@ -31,8 +31,23 @@ const itemSchema = new mongoose.Schema({
   description: String,
 });
 
+const orderSchema = new mongoose.Schema({
+  game: String,
+  name: String,
+  streetAdd: String,
+  city: String,
+  state: String,
+  zip: String,
+});
+
+const gameSchema = new mongoose.Schema({
+  game: String,
+});
+
 // Create a model for items in the museum.
 const Item = mongoose.model('Item', itemSchema);
+const Order = mongoose.model('Order', orderSchema);
+const Game = mongoose.model('Game', gameSchema);
 
 // Upload a photo. Uses the multer middleware for the upload and then returns
 // the path where the photo is stored in the file system.
@@ -44,6 +59,59 @@ app.post('/api/photos', upload.single('photo'), async (req, res) => {
   res.send({
     path: "/images/" + req.file.filename
   });
+});
+
+app.post('/api/order', async(req, res) => {
+  const order = new Order({
+    game: req.body.game,
+    name: req.body.name,
+    streetAdd: req.body.streetAdd,
+    city: req.body.city,
+    state: req.body.state,
+    zip: req.body.zip,
+  });
+  try {
+    await item.save();
+    res.send(item);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/api/game', async (req, res) => {
+  console.log("In the thing");
+  const newGame = new Game({
+    game: req.body.game,
+  });
+  try {
+    console.log("In the try block");
+    await newGame.save();
+    res.send(newGame);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/api/order', async (req, res) => {
+  try {
+    let orders = await Order.find();
+    res.send(orders);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.get('/api/game', async (req, res) => {
+  try {
+    let games = await Game.find();
+    res.send(games);
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
 });
 
 // Create a new item in the museum: takes a title and a path to an image.

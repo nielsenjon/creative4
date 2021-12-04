@@ -1,34 +1,144 @@
 <template>
-<div class="home">
-  <section class="image-gallery">
-    <div class="image" v-for="item in items" :key="item.id">
-      <h2>{{item.title}}</h2>
-      <img :src="item.path" />
-      <p style="text-align: center;">{{item.description}}</p>
+<div class="admin">
+  <div class="heading">
+    <h2>Games For Sale</h2>
+  </div>
+  <div class="edit">
+    <div class="form">
+      <input v-model="findTitle" placeholder="Search">
+      <div class="suggestions" v-if="suggestions.length > 0">
+        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
+  <div class="heading">
+    <h2>Order Information</h2>
+  </div>
+  <div class="add">
+    <div class="form">
+      <input v-model="name" placeholder="Name">
+      <p></p>
+      <input v-model="streetAdd" placeholder="Street Address">
+      <p></p>
+      <input v-model="city" placeholder="City">
+      <p></p>
+      <input v-model="state" placeholder="State">
+      <p></p>
+      <input v-model="zip" placeholder="Zip">
+      <p></p>
+      <div class="actions" v-if="findItem">
+        <button @click="deleteItem(findItem)">Delete</button>
+      </div>
+    </div>
+  </div>
+  <div class="add">
+    <div class="form">
+      <input v-model="addGame" placeholder="Game">
+      <p></p>
+      <button @click="newGame()">Add</button>
+    </div>
+  </div>
 </div>
-
 </template>
 
 <script>
-// @ is an alias to /src
 import axios from 'axios';
 export default {
-  name: 'Home',
+  name: 'Admin',
   data() {
     return {
-     items: [],
+      title: "",
+      name: "",
+      streetAdd: "",
+      city: "",
+      state: "",
+      zip: "",
+      addGame: "",
+      file: null,
+      description: "",
+      addItem: null,
+      items: [],
+      findTitle: "",
+      findItem: null,
     }
   },
   created() {
     this.getItems();
   },
+  computed: {
+    suggestions() {
+      let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
+      return items.sort((a, b) => a.title > b.title);
+    }
+  },
   methods: {
+    fileChanged(event) {
+      this.file = event.target.files[0]
+    },
+    async upload() {
+      try {
+        const formData = new FormData();
+        formData.append('photo', this.file, this.file.name)
+        let r1 = await axios.post('/api/photos', formData);
+        let r2 = await axios.post('/api/items', {
+          title: this.title,
+          path: r1.data.path,
+          description: this.description
+        });
+        this.addItem = r2.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async getItems() {
       try {
         let response = await axios.get("/api/items");
         this.items = response.data;
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async makeOrder() {
+      let r1 = await axios.post('/api/order', {
+        game: this.findItem,
+        name: this.name,
+        streetAdd: this.streetAdd,
+        city: this.city,
+        state: this.state,
+        zip: this.zip,
+      });
+      this.addItem = r1.data;
+    },
+    async newGame() {
+      let r1 = await axios.post('/api/game', {
+        game: this.addGame,
+      });
+      this.addItem = r1.data;
+    },
+    selectItem(item) {
+      this.findTitle = "";
+      this.findItem = item;
+    },
+    async deleteItem(item) {
+      try {
+        await axios.delete("/api/items/" + item._id);
+        this.findItem = null;
+        this.getItems();
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async editItem(item) {
+      try {
+        await axios.put("/api/items/" + item._id, {
+          title: this.findItem.title,
+          description: this.findItem.description,
+        });
+        this.findItem = null;
+        this.getItems();
         return true;
       } catch (error) {
         console.log(error);
@@ -41,47 +151,70 @@ export default {
 <style scoped>
 .image h2 {
   font-style: italic;
+  font-size: 1em;
 }
 
-/* Masonry */
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
+.heading {
+  display: flex;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
-.image-gallery {
-  column-gap: 1.5em;
+.heading h2 {
+  margin-top: 8px;
+  margin-left: 10px;
 }
 
-.image {
-  margin: 0 0 1.5em;
-  display: inline-block;
-  width: 100%;
+.add,
+.edit {
+  display: flex;
 }
 
-.image img {
-  width: 100%;
+.circle {
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  padding: 8px;
+  background: #333;
+  color: #fff;
+  text-align: center
 }
 
-/* Masonry on large screens */
-@media only screen and (min-width: 1024px) {
-  .image-gallery {
-    column-count: 4;
-  }
+/* Form */
+input,
+textarea,
+select,
+button {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1em;
 }
 
-/* Masonry on medium-sized screens */
-@media only screen and (max-width: 1023px) and (min-width: 768px) {
-  .image-gallery {
-    column-count: 3;
-  }
+.form {
+  margin-right: 50px;
 }
 
-/* Masonry on small screens */
-@media only screen and (max-width: 767px) and (min-width: 540px) {
-  .image-gallery {
-    column-count: 2;
-  }
+/* Uploaded images */
+.upload h2 {
+  margin: 0px;
 }
+
+.upload img {
+  max-width: 300px;
+}
+
+/* Suggestions */
+.suggestions {
+  width: 200px;
+  border: 1px solid #ccc;
+}
+
+.suggestion {
+  min-height: 20px;
+}
+
+.suggestion:hover {
+  background-color: #5BDEFF;
+  color: #fff;
+}
+
 </style>
