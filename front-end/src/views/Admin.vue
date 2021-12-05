@@ -28,8 +28,6 @@
       <button @click="deleteGame(findItem)">Delete</button>
       <button @click="editGame(findItem)">Edit</button>
     </div>
-    <div class="actions" v-if="findItem">
-    </div>
   </div>
   <div class="heading">
     <h2>Edit Orders</h2>
@@ -205,36 +203,26 @@ export default {
 </script>
 
 <style scoped>
-.image h2 {
-  font-style: italic;
-  font-size: 1em;
-}
 
 .heading {
   display: flex;
-  margin-bottom: 20px;
+  justify-content: center !important;
+  margin-bottom: 8px;
   margin-top: 20px;
 }
-
+h1 {
+text-align: center;
+}
 .heading h2 {
   margin-top: 8px;
-  margin-left: 10px;
 }
 
 .add,
 .edit {
   display: flex;
+  flex-direction: column;
 }
 
-.circle {
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  padding: 8px;
-  background: #333;
-  color: #fff;
-  text-align: center
-}
 
 /* Form */
 input,
@@ -245,19 +233,6 @@ button {
   font-size: 1em;
 }
 
-.form {
-  margin-right: 50px;
-}
-
-/* Uploaded images */
-.upload h2 {
-  margin: 0px;
-}
-
-.upload img {
-  max-width: 300px;
-}
-
 /* Suggestions */
 .suggestions {
   width: 200px;
@@ -265,12 +240,49 @@ button {
 }
 
 .suggestion {
+  width: 200px;
   min-height: 20px;
+  border: .5px solid #577590;
 }
 
 .suggestion:hover {
-  background-color: #5BDEFF;
+  background-color: #000;
   color: #fff;
+}
+
+.upload,
+.actions {
+margin-top: 25px;
+}
+
+.upload button {
+  margin: 5px;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+.heading {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+.add,
+.edit {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 801px) {
+
+
+}
+
+* {
+  align-items: center !important;
 }
 
 </style>

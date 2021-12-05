@@ -1,34 +1,38 @@
 <template>
 <div class="admin">
-  <div class="heading">
-    <h2>Games For Sale</h2>
-  </div>
-  <div class="edit">
-    <div class="form">
-      <input v-model="findTitle" placeholder="Search">
-      <div class="suggestions" v-if="suggestions.length > 0">
-        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.game}}
+  <div class="section">
+    <div class="heading">
+      <h2>Games For Sale</h2>
+    </div>
+    <div class="edit">
+      <div class="form">
+        <input v-model="findTitle" placeholder="Search">
+        <div class="suggestions" v-if="suggestions.length > 0">
+          <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.game}}
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="heading">
-    <h2>Order Information</h2>
-  </div>
-  <div class="add">
-    <div class="form">
-      <input v-model="name" placeholder="Name">
-      <p></p>
-      <input v-model="streetAdd" placeholder="Street Address">
-      <p></p>
-      <input v-model="city" placeholder="City">
-      <p></p>
-      <input v-model="state" placeholder="State">
-      <p></p>
-      <input v-model="zip" placeholder="Zip">
-      <p></p>
-      <div class="actions" v-if="findItem">
-        <button @click="makeOrder()">Place Order</button>
+  <div class="section">
+    <div class="heading">
+      <h2>Order Information</h2>
+    </div>
+    <div class="add">
+      <div class="form">
+        <input v-model="name" placeholder="Name">
+        <p></p>
+        <input v-model="streetAdd" placeholder="Street Address">
+        <p></p>
+        <input v-model="city" placeholder="City">
+        <p></p>
+        <input v-model="state" placeholder="State">
+        <p></p>
+        <input v-model="zip" placeholder="Zip">
+        <p></p>
+        <div class="actions" v-if="findItem">
+          <button @click="makeOrder()">Place Order</button>
+        </div>
       </div>
     </div>
   </div>
@@ -127,36 +131,29 @@ export default {
 </script>
 
 <style scoped>
+.admin {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
 .image h2 {
   font-style: italic;
   font-size: 1em;
 }
 
 .heading {
+  margin-right: 8px;
+}
+
+.section {
   display: flex;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  flex-direction: column;
+  margin: auto;
 }
 
-.heading h2 {
-  margin-top: 8px;
-  margin-left: 10px;
-}
 
-.add,
-.edit {
-  display: flex;
-}
-
-.circle {
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  padding: 8px;
-  background: #333;
-  color: #fff;
-  text-align: center
-}
 
 /* Form */
 input,
@@ -171,15 +168,6 @@ button {
   margin-right: 50px;
 }
 
-/* Uploaded images */
-.upload h2 {
-  margin: 0px;
-}
-
-.upload img {
-  max-width: 300px;
-}
-
 /* Suggestions */
 .suggestions {
   width: 200px;
@@ -187,12 +175,28 @@ button {
 }
 
 .suggestion {
+  width: 200px;
   min-height: 20px;
+  border: .5px solid #577590;
 }
 
 .suggestion:hover {
-  background-color: #5BDEFF;
+  background-color: #000;
   color: #fff;
 }
 
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+  .admin {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  }
+  .section {
+    padding-bottom: 25px;
+  }
+}
 </style>

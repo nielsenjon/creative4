@@ -13,22 +13,23 @@
   <div class="content">
     <router-view />
   </div>
+  <hr>
   <div class="footer">
     <router-link to="/admin">Admin</router-link>
-    <p class="footer">My Project's Github: <a href="https://github.com/nielsenjon/creative4">LINK</a></p>
+    <p>Project's Github: <a href="https://github.com/nielsenjon/creative4">LINK</a></p>
   </div>
 </div>
 </template>
 
 <style>
-html {
+* {
   box-sizing: border-box;
 }
 
 body {
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
-  background: #fff;
+  background: #f0ead2;
   padding: 0px;
   margin: 0px;
 }
@@ -37,8 +38,9 @@ body {
 .header {
   display: flex;
   justify-content: center;
+  width: 100%;
   padding: 10px 100px 0px 100px;
-  background-color: #bfbfbd;
+  background-color: #577590;
 }
 
 #logo_image {
@@ -56,15 +58,19 @@ body {
 
 .content {
   padding: 20px 100px;
-  min-height: 500px;
 }
 
 /* Footer */
 .footer {
-  height: 50px;
-  padding: 20px 100px 0px 100px;
-  background: #bfbfbd;
-  font-size: 12px;
+  justify-content: center;
+  width: 100%;
+  padding: 20px 0;
+  background: #f0ead2;
+  font-size: 20px;
+}
+
+.footer p {
+  font-size: 15px;
 }
 
 .footer a {
@@ -81,8 +87,27 @@ h2 {
 
 .footer {
   margin: 0px;
-  padding-top: 0px;
+  padding-top: 10px;
   padding-bottom: 25px;
   text-align: center;
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 800px) {
+  .footer {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .header {
+    justify-content: center;
+    width: 100%;
+  }
+
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 801px) {
+
 }
 </style>
