@@ -20,7 +20,7 @@ const upload = multer({
 const mongoose = require('mongoose');
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/museum', {
+mongoose.connect('mongodb://localhost:27017/creative', {
   useNewUrlParser: true
 });
 
@@ -71,25 +71,21 @@ app.post('/api/order', async(req, res) => {
     zip: req.body.zip,
   });
   try {
-    await item.save();
-    res.send(item);
+    await order.save();
+    res.send(order);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
 
 app.post('/api/game', async (req, res) => {
-  console.log("In the thing");
   const newGame = new Game({
     game: req.body.game,
   });
   try {
-    console.log("In the try block");
     await newGame.save();
     res.send(newGame);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
@@ -99,7 +95,6 @@ app.get('/api/order', async (req, res) => {
     let orders = await Order.find();
     res.send(orders);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
@@ -109,7 +104,6 @@ app.get('/api/game', async (req, res) => {
     let games = await Game.find();
     res.send(games);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
@@ -125,7 +119,6 @@ app.post('/api/items', async (req, res) => {
     await item.save();
     res.send(item);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
@@ -136,7 +129,6 @@ app.get('/api/items', async (req, res) => {
     let items = await Item.find();
     res.send(items);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });
@@ -148,7 +140,40 @@ app.delete('/api/items/:id', async (req, res) => {
     });
     res.sendStatus(200);
   } catch (error) {
-    console.log(error);
+    res.sendStatus(500);
+  }
+});
+
+app.delete('/api/order/:id', async (req, res) => {
+  try {
+    await Order.deleteOne({
+      _id: req.params.id
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
+app.delete('/api/game/:id', async (req, res) => {
+  try {
+    await Game.deleteOne({
+      _id: req.params.id
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+});
+
+app.put('/api/game/:id', async (req, res) => {
+  try {
+    await Game.findOneAndUpdate(
+      { _id: req.params.id },
+      { game: req.body.game }
+    );
+    res.sendStatus(200);
+  } catch (error) {
     res.sendStatus(500);
   }
 });
@@ -162,7 +187,6 @@ app.put('/api/items/:id', async (req, res) => {
     );
     res.sendStatus(200);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 });

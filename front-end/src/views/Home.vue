@@ -7,7 +7,7 @@
     <div class="form">
       <input v-model="findTitle" placeholder="Search">
       <div class="suggestions" v-if="suggestions.length > 0">
-        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.title}}
+        <div class="suggestion" v-for="s in suggestions" :key="s.id" @click="selectItem(s)">{{s.game}}
         </div>
       </div>
     </div>
@@ -28,15 +28,8 @@
       <input v-model="zip" placeholder="Zip">
       <p></p>
       <div class="actions" v-if="findItem">
-        <button @click="deleteItem(findItem)">Delete</button>
+        <button @click="makeOrder()">Place Order</button>
       </div>
-    </div>
-  </div>
-  <div class="add">
-    <div class="form">
-      <input v-model="addGame" placeholder="Game">
-      <p></p>
-      <button @click="newGame()">Add</button>
     </div>
   </div>
 </div>
@@ -68,7 +61,7 @@ export default {
   },
   computed: {
     suggestions() {
-      let items = this.items.filter(item => item.title.toLowerCase().startsWith(this.findTitle.toLowerCase()));
+      let items = this.items.filter(item => (item.game.toLowerCase().indexOf(this.findTitle.toLowerCase()) !== -1));
       return items.sort((a, b) => a.title > b.title);
     }
   },
@@ -76,24 +69,9 @@ export default {
     fileChanged(event) {
       this.file = event.target.files[0]
     },
-    async upload() {
-      try {
-        const formData = new FormData();
-        formData.append('photo', this.file, this.file.name)
-        let r1 = await axios.post('/api/photos', formData);
-        let r2 = await axios.post('/api/items', {
-          title: this.title,
-          path: r1.data.path,
-          description: this.description
-        });
-        this.addItem = r2.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
     async getItems() {
       try {
-        let response = await axios.get("/api/items");
+        let response = await axios.get("/api/game");
         this.items = response.data;
         return true;
       } catch (error) {
@@ -102,7 +80,7 @@ export default {
     },
     async makeOrder() {
       let r1 = await axios.post('/api/order', {
-        game: this.findItem,
+        game: this.findItem.game,
         name: this.name,
         streetAdd: this.streetAdd,
         city: this.city,
